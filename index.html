@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffb6d9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Luna</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hot:    #ff5fa0;
+    --pink:   #ffb6d9;
+    --soft:   #ffd6eb;
+    --pale:   #fff0f8;
+    --deep:   #d63c80;
+    --yellow: #ffe066;
+    --white:  #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+
+  body {
+    min-height: 100dvh;
+    font-family: 'Nunito', sans-serif;
+    background: var(--soft);
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---- BG gradient ---- */
+  .bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%,  #ffe4f2 0%, transparent 65%),
+      radial-gradient(ellipse 70% 50% at 0% 100%,  #ffcce8 0%, transparent 55%),
+      radial-gradient(ellipse 60% 40% at 100% 50%, #ffc6e4 0%, transparent 55%),
+      linear-gradient(160deg, #ffd6eb 0%, #ffb6d9 50%, #ffc8e4 100%);
+  }
+
+  /* ---- FLOATING FOOD DOODLES ---- */
+  .foods {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden;
+  }
+  .food {
+    position: absolute;
+    animation: food-float ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(200,60,120,0.18));
+  }
+  @keyframes food-float {
+    0%,100% { transform: translateY(0px) rotate(var(--r0)); }
+    50%      { transform: translateY(-14px) rotate(var(--r1)); }
+  }
+
+  /* ---- SPARKLES ---- */
+  .sparkles { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+  .sp {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, #ffcce8 50%, transparent 75%);
+    animation: sp-twinkle ease-in-out infinite;
+  }
+  @keyframes sp-twinkle {
+    0%,100% { opacity:0; transform:scale(0.4); }
+    50%      { opacity:1; transform:scale(1.3); }
+  }
+
+  /* ---- CONTENT ---- */
+  .content {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100dvh;
+    padding: 2.5rem 1.5rem;
+    padding-top: max(2.5rem, env(safe-area-inset-top));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+
+  /* ---- AVATAR ---- */
+  .avatar-wrap {
+    position: relative; width: 115px; height: 115px; margin-bottom: 1.2rem;
+  }
+  .avatar-ring {
+    position: absolute; inset: -6px; border-radius: 50%;
+    background: conic-gradient(#ff5fa0,#ffb6d9,#ffe066,#ff9cc8,#ff5fa0,#ffcce8,#ff5fa0);
+    animation: ring-spin 4s linear infinite;
+  }
+  @keyframes ring-spin { to { transform: rotate(360deg); } }
+  .avatar-ring-inner {
+    position: absolute; inset: 3px; border-radius: 50%;
+    background: var(--soft); z-index: 1;
+  }
+  .avatar {
+    position: absolute; inset: 5px; z-index: 2;
+    width: calc(100% - 10px); height: calc(100% - 10px);
+    border-radius: 50%; object-fit: cover; display: block;
+  }
+  /* Donut badge */
+  .badge {
+    position: absolute; bottom: -4px; right: -4px;
+    width: 34px; height: 34px; z-index: 3;
+    animation: badge-wiggle 2s ease-in-out infinite;
+  }
+  @keyframes badge-wiggle {
+    0%,100% { transform: rotate(-10deg) scale(1); }
+    50%      { transform: rotate(10deg) scale(1.15); }
+  }
+
+  /* ---- NAME ---- */
+  h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.8rem;
+    color: var(--deep);
+    text-align: center;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.15rem;
+    text-shadow: 0 3px 0 rgba(255,100,160,0.25), 0 0 20px rgba(255,100,160,0.2);
+  }
+
+  .name-sub {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--hot);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    text-align: center;
+  }
+
+  /* Wavy divider */
+  .divider { width: 100px; height: 8px; margin: 0 auto 0.9rem; }
+
+  /* ---- LOCATION ---- */
+  .location-text {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Nunito', sans-serif; font-weight: 600;
+    font-size: 0.75rem; color: var(--deep);
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(8px);
+    padding: 5px 14px; border-radius: 50px;
+    border: 1.5px solid rgba(255,100,160,0.25);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.04em;
+    box-shadow: 0 2px 10px rgba(255,100,160,0.1);
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #6dbf7e; flex-shrink: 0;
+    box-shadow: 0 0 6px #6dbf7e;
+    animation: dot-pulse 2s ease-in-out infinite;
+  }
+  @keyframes dot-pulse { 0%,100%{opacity:1;}50%{opacity:0.3;} }
+
+  /* ---- BUTTONS ---- */
+  .buttons {
+    display: flex; flex-direction: column; gap: 0.65rem;
+    width: 100%; max-width: 300px;
+  }
+
+  .btn {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 52px; padding: 0 1.2rem;
+    border-radius: 50px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    color: var(--deep);
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-align: center; text-decoration: none;
+    border: 2px solid rgba(255,100,160,0.3);
+    cursor: pointer; touch-action: manipulation;
+    user-select: none; -webkit-user-select: none;
+    overflow: hidden;
+    transition: transform 0.12s ease, background 0.15s ease;
+    box-shadow: 0 4px 0 rgba(255,100,160,0.2), 0 6px 16px rgba(255,100,160,0.1);
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute; top:0; left:-100%; width:60%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    transition: left 0.4s; pointer-events: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #ff5fa0 0%, #e8387a 100%);
+    border-color: #d42a6a;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 0 #b81e58, 0 6px 20px rgba(255,80,140,0.3);
+    animation: btn-bounce 2.5s ease-in-out infinite;
+  }
+  @keyframes btn-bounce {
+    0%,100% { transform: translateY(0); box-shadow: 0 4px 0 #b81e58, 0 6px 20px rgba(255,80,140,0.3); }
+    50%      { transform: translateY(-3px); box-shadow: 0 7px 0 #b81e58, 0 10px 24px rgba(255,80,140,0.35); }
+  }
+
+  .btn-second { border-color: rgba(255,100,160,0.35); }
+
+  @media (hover:hover) {
+    .btn:hover { background: rgba(255,255,255,0.92); transform: translateY(-2px); }
+    .btn:hover::after { left: 140%; }
+    .btn-primary:hover { background: linear-gradient(135deg, #ff79b4 0%, #f04a8a 100%); }
+  }
+  .btn:active { transform: scale(0.97) translateY(2px); }
+
+  /* ---- BTN TAG ---- */
+  .btn-tag-wrap { position: relative; }
+  .btn-tag {
+    position: absolute; left: calc(100% + 10px); top: 50%;
+    transform: translateY(-50%) rotate(-8deg);
+    display: flex; align-items: center; gap: 4px;
+    font-size: 0.82rem; color: var(--deep);
+    pointer-events: none; white-space: nowrap;
+    animation: tag-bounce 1.6s ease-in-out infinite;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+  }
+  .btn-tag svg { width: 24px; height: 18px; transform: scaleX(-1); }
+  @keyframes tag-bounce {
+    0%,100% { transform: translateY(-50%) rotate(-8deg) scale(1); }
+    50%      { transform: translateY(-50%) rotate(-8deg) scale(1.1); }
+  }
+
+  /* ---- FOOTER ---- */
+  .footer-deco {
+    margin-top: 1.6rem;
+    font-family: 'Pacifico', cursive;
+    font-size: 0.72rem;
+    color: rgba(214,60,128,0.45);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<script>
+var path = window.location.pathname.replace(/\/$/, '');
+if (path === '/link')  { window.location.replace('https://onlyfans.com/aliciapearl/c7'); }
+if (path === '/link2') { window.location.replace('https://onlyfans.com/aliciapearl/c7'); }
+</script>
+
+<div class="bg"></div>
+
+<!-- Sparkles -->
+<div class="sparkles">
+  <div class="sp" style="left:12%;top:8%;width:5px;height:5px;animation-duration:2.1s;animation-delay:0s"></div>
+  <div class="sp" style="left:82%;top:6%;width:4px;height:4px;animation-duration:2.8s;animation-delay:0.4s"></div>
+  <div class="sp" style="left:6%;top:45%;width:6px;height:6px;animation-duration:2.4s;animation-delay:1.1s"></div>
+  <div class="sp" style="left:92%;top:38%;width:5px;height:5px;animation-duration:3.0s;animation-delay:0.7s"></div>
+  <div class="sp" style="left:25%;top:88%;width:4px;height:4px;animation-duration:2.2s;animation-delay:1.5s"></div>
+  <div class="sp" style="left:70%;top:85%;width:6px;height:6px;animation-duration:2.6s;animation-delay:0.9s"></div>
+  <div class="sp" style="left:50%;top:3%;width:5px;height:5px;animation-duration:2.9s;animation-delay:0.3s"></div>
+  <div class="sp" style="left:38%;top:93%;width:4px;height:4px;animation-duration:2.3s;animation-delay:1.8s"></div>
+  <div class="sp" style="left:88%;top:70%;width:5px;height:5px;animation-duration:2.7s;animation-delay:1.3s"></div>
+  <div class="sp" style="left:4%;top:75%;width:4px;height:4px;animation-duration:2.0s;animation-delay:2.0s"></div>
+</div>
+
+<!-- Food emojis -->
+<div class="foods">
+  <span class="food" style="left:4%;top:8%;font-size:44px;--r0:-12deg;--r1:-6deg;animation-duration:4.5s;">🍩</span>
+  <span class="food" style="right:5%;top:10%;font-size:40px;--r0:14deg;--r1:8deg;animation-duration:5.2s;animation-delay:0.8s;">🍟</span>
+  <span class="food" style="left:3%;top:40%;font-size:42px;--r0:-20deg;--r1:-14deg;animation-duration:6s;animation-delay:1.5s;">🍕</span>
+  <span class="food" style="right:4%;top:42%;font-size:44px;--r0:8deg;--r1:14deg;animation-duration:5.5s;animation-delay:2s;">🍔</span>
+  <span class="food" style="left:5%;bottom:14%;font-size:42px;--r0:6deg;--r1:12deg;animation-duration:4.8s;animation-delay:1s;">🍦</span>
+  <span class="food" style="right:5%;bottom:16%;font-size:40px;--r0:-10deg;--r1:-4deg;animation-duration:5.8s;animation-delay:0.5s;">🧋</span>
+  <span class="food" style="left:42%;top:4%;font-size:34px;--r0:20deg;--r1:26deg;animation-duration:3.8s;animation-delay:2.5s;">🍩</span>
+  <span class="food" style="left:38%;bottom:10%;font-size:36px;--r0:-15deg;--r1:-8deg;animation-duration:6.2s;animation-delay:3s;">🍪</span>
+  <span class="food" style="right:14%;top:24%;font-size:36px;--r0:-8deg;--r1:-2deg;animation-duration:5s;animation-delay:1.2s;">🍭</span>
+  <span class="food" style="left:14%;bottom:28%;font-size:34px;--r0:18deg;--r1:24deg;animation-duration:4.2s;animation-delay:2.2s;">🧁</span>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+  <div class="avatar-wrap">
+    <div class="avatar-ring"></div>
+    <div class="avatar-ring-inner"></div>
+    <img class="avatar" src="https://github.com/dundergralle/ALICIALANDING/blob/main/photo_2026-04-29_18-34-42.jpg?raw=true" alt="Luna">
+    <!-- Donut badge -->
+    <span class="badge" style="position:absolute;bottom:-4px;right:-4px;z-index:3;font-size:22px;line-height:1;">🍩</span>
+  </div>
+
+  <h1>Nova</h1>
+
+  <svg class="divider" viewBox="0 0 100 8" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 5 Q15 1 28 5 Q41 9 54 5 Q67 1 80 5 Q90 8 98 4" fill="none" stroke="#ff8ec0" stroke-width="2.2" stroke-linecap="round"/>
+  </svg>
+
+  <div class="location-text">
+    <span class="dot"></span>
+    <span id="loc-text"></span>
+  </div>
+
+  <div class="buttons">
+    <a class="btn btn-primary" href="/link" target="_blank">🍩 hemliga sidan</a>
+    <div class="btn-tag-wrap">
+      <a class="btn btn-second" href="/link2" target="_blank">💌 skriv till mig (free)</a>
+      <span class="btn-tag">
+        <svg viewBox="0 0 28 22" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#d63c80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 2 4 Q 14 4 22 14"/>
+          <path d="M 22 14 L 17 12"/>
+          <path d="M 22 14 L 20 9"/>
+        </svg>
+        gratis
+      </span>
+    </div>
+    <a class="btn" href="https://wa.me/DITTTELEFONNUMMER" target="_blank">📞 mitt nummer</a>
+  </div>
+
+  <p class="footer-deco">✦ treat yourself ✦</p>
+</div>
+
+<script>
+(function() {
+  var fallbacks = [
+    "Stockholm","Göteborg","Malmö","Uppsala","Linköping","Örebro","Västerås",
+    "Helsingborg","Norrköping","Jönköping","Umeå","Lund","Gävle","Borås","Sundsvall",
+    "Oslo","Bergen","Trondheim","Stavanger","Drammen","Kristiansand","Tromsø","Ålesund"
+  ];
+  function setCity(city) {
+    var c = (city && city.trim().length > 1) ? city.trim() : fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    document.getElementById('loc-text').textContent = '5 minutes ago in: ' + c;
+  }
+  function get(url, extract) {
+    return fetch(url,{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      var v=extract(d); if(!v||v.trim().length<2) throw new Error('no city'); return v;
+    });
+  }
+  get('https://ipinfo.io/json',function(d){return d&&d.city;})
+    .catch(function(){return get('https://ip-api.com/json/?fields=city,regionName',function(d){return d&&(d.city||d.regionName);});})
+    .catch(function(){return get('https://ipapi.co/json/',function(d){return d&&(d.city||d.region);});})
+    .then(function(city){setCity(city);})
+    .catch(function(){setCity(null);});
+})();
+</script>
+</body>
+</html>
